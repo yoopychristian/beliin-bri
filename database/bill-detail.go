@@ -11,7 +11,9 @@ type BillDetail struct {
 	Nama              string `gorm:"column:nama;type:string"`
 	Alamat            string `gorm:"column:alamat_pengiriman;type:string"`
 	NoTelepon         string `gorm:"column:no_telepon;type:string"`
+	NamaBarang        string `gorm:"column:nama_barang;type:string"`
 	JumlahBarang      int    `gorm:"column:jumlah_barang;type:int"`
+	HargaBarang       int    `gorm:"column:harga_barangsatuan;type:int"`
 	TotalHarga        int    `gorm:"column:total_harga;type:int"`
 	Email             string `gorm:"column:email;type:string"`
 	PilihanPengiriman string `gorm:"column:pilihan_pengiriman;type:string"`
@@ -77,9 +79,10 @@ func (p BillDetail) BillList(db *gorm.DB, order string) (*[]shared.BillDetail, e
 }
 
 func (p BillDetail) SendBill(db *gorm.DB, id string) (*[]shared.BillDetail, error) {
-	sql := `SELECT dp.id_pelanggan, dp.nama, dp.alamat_pengiriman, dp.no_telepon, oc.jumlah_barang, oc.total_harga, oc.pilihan_pengiriman, dp.email, dp.id_va FROM daftar_pelanggan AS dp
+	sql := `SELECT dp.id_pelanggan, dp.nama, dp.alamat_pengiriman, dp.no_telepon, sm.nama_barang,  sm.harga_barangsatuan, oc.jumlah_barang, oc.total_harga, oc.pilihan_pengiriman, dp.id_va FROM daftar_pelanggan AS dp
 	FULL JOIN order_customers AS oc ON oc.id_pelanggan = dp.id_pelanggan
-	FULL JOIN virtual_account AS va ON va.id_va = dp.id_va where dp.id_pelanggan = ?`
+	FULL JOIN virtual_account AS va ON va.id_va = dp.id_va
+	FULL JOIN stock_management as sm on sm.id_stock = oc.id_stock where dp.id_pelanggan = ?`
 
 	rows, err := db.Raw(sql, id).Rows()
 	if err != nil {
@@ -97,10 +100,11 @@ func (p BillDetail) SendBill(db *gorm.DB, id string) (*[]shared.BillDetail, erro
 			&g.Nama,
 			&g.Alamat,
 			&g.NoTelepon,
+			&g.NamaBarang,
+			&g.HargaBarang,
 			&g.JumlahBarang,
 			&g.TotalHarga,
 			&g.PilihanPengiriman,
-			&g.Email,
 			&g.NoVa)
 		data = append(data, g)
 	}

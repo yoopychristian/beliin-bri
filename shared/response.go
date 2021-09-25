@@ -87,11 +87,11 @@ type BillDetail struct {
 	Nama              string `json:"nama"`
 	Alamat            string `json:"alamat_pengiriman"`
 	NoTelepon         string `json:"no_telepon"`
+	NamaBarang        string `json:"nama_barang"`
 	JumlahBarang      int    `json:"jumlah_barang"`
+	HargaBarang       int    `json:"harga_barangsatuan"`
 	TotalHarga        int    `json:"total_harga"`
 	Email             string `json:"email"`
 	PilihanPengiriman string `json:"pilihan_pengiriman"`
 	NoVa              string `json:"no_va"`
 }
-
-

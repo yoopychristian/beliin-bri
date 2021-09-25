@@ -5,9 +5,8 @@ import (
 	tables "beliin-bri/database"
 	h "beliin-bri/helpers"
 	shared "beliin-bri/shared"
-	"encoding/json"
-	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -59,21 +58,28 @@ func SendBillDetail(ctx cfg.RepositoryContext) gin.HandlerFunc {
 				Nama:              row.Nama,
 				Alamat:            row.Alamat,
 				NoTelepon:         row.NoTelepon,
+				NamaBarang:        row.NamaBarang,
 				JumlahBarang:      row.JumlahBarang,
 				TotalHarga:        row.TotalHarga,
-				Email:             row.Email,
 				PilihanPengiriman: row.PilihanPengiriman,
 				NoVa:              row.NoVa,
 			})
-
+			go h.CreateInvoicePDF(
+				row.Nama,
+				row.Alamat,
+				row.NamaBarang,
+				strconv.Itoa(row.JumlahBarang),
+				strconv.Itoa(row.HargaBarang),
+				row.NoVa)
 		}
 
-		e, err := json.Marshal(data)
-		if err != nil {
-			fmt.Println(err)
-		}
+		// e, err := json.Marshal(data)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
 
-		go h.SendMail("yoopychs@gmail.com", string(e))
+		go h.SendMail("yoopychs@gmail.com", "THIS IS INVOICE FROM GOLANG")
+
 		//Account Information
 		c.JSON(http.StatusOK, gin.H{
 			"data": "Send Invoice Success",
