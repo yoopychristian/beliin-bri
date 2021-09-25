@@ -1,0 +1,6 @@
+.env
+xmod.bat
+zmod.bat
+go.mod
+go.sum
+*.pdf
