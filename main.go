@@ -15,6 +15,8 @@ import (
 	cfg "beliin-bri/configuration"
 	"beliin-bri/services"
 
+	"beliin-bri/middleware"
+
 	h "beliin-bri/helpers"
 
 	"github.com/gin-contrib/pprof"
@@ -84,6 +86,7 @@ func Routing(ctx cfg.RepositoryContext) *gin.Engine {
 
 	//services
 	function := r.Group("/services")
+	function.Use(middleware.JwtAuthMiddleware())
 	{
 		function.POST("/add-stock", services.AddStock(ctx))
 		function.DELETE("/delete-stock", services.DeleteStock(ctx))

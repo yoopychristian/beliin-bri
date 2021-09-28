@@ -6,6 +6,7 @@ import (
 	h "beliin-bri/helpers"
 	shared "beliin-bri/shared"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -84,14 +85,14 @@ func Login(ctx cfg.RepositoryContext) gin.HandlerFunc {
 			return
 		}
 
-		token := jwt.New(jwt.SigningMethodHS256)
-
-		claims := token.Claims.(jwt.MapClaims)
+		claims := jwt.MapClaims{}
 		claims["username"] = input.Username
 		claims["level"] = "application"
 		claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+		claims["authorized"] = true
 
-		t, err := token.SignedString([]byte("secret"))
+		at := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+		token, err := at.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
 		if err != nil {
 			h.BadResponse(h.RespParams{
 				Log:      ctx.Log,
@@ -105,14 +106,14 @@ func Login(ctx cfg.RepositoryContext) gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusOK, gin.H{
-			"token": t,
-			"data": shared.ResponseDetail{
-				IDUser:   auth.IDUser,
-				Nama:     auth.Nama,
-				Username: auth.Username,
-				Email:    auth.Email,
-				NoPonsel: auth.NoPonsel,
-			},
+			"token": token,
+			// "data": shared.ResponseDetail{
+			// 	IDUser:   auth.IDUser,
+			// 	Nama:     auth.Nama,
+			// 	Username: auth.Username,
+			// 	Email:    auth.Email,
+			// 	NoPonsel: auth.NoPonsel,
+			// },
 		})
 	}
 }
