@@ -1,0 +1,76 @@
+def apps = "Beliin" //apps name
+def appName = "Beliin-bri" //folder helm name
+def namespace = "beliin" //namespace k8s
+
+pipeline {
+  agent {
+    kubernetes {
+      label "jnlp-slave"
+      defaultContainer "jnlp"
+      yaml """
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          labels:
+            component: ci
+        spec:
+          # Use service account that can deploy to all namespaces
+          serviceAccountName: default
+          containers:
+          - name: gcloud
+            image: google/cloud-sdk:272.0.0-alpine
+            command:
+            - cat
+            tty: true
+          - name: helm
+            image: alpine/helm:3.6.3
+            imagePullPolicy: IfNotPresent
+            command:
+            - cat
+            tty: true
+      """
+    }
+  }
+  stages {
+    stage("Build Image") {
+      environment {
+        project = "${env.BRANCH_NAME == 'master' ? 'bri-embrio-dev' : 'bri-embrio-dev'}"
+        IMAGE_REPO = "gcr.io/${project}/${appName}"
+        IMAGE_TAG = "${env.GIT_COMMIT.substring(0,7)}"
+      }
+      steps {
+        container("gcloud") {
+        withCredentials([
+          file(credentialsId: "k8s-builder-dev", variable: "JSONKEY"),          
+          ]) {
+            sh "cat ${JSONKEY} >> key.json"
+            sh "gcloud auth activate-service-account --key-file=key.json"
+            sh "gcloud builds submit --project ${project} --tag ${IMAGE_REPO}:${IMAGE_TAG} ."
+          }
+      }
+      }
+    }
+    stage("Deployment to Develop") {
+      when {
+        branch 'develop'
+      }
+      environment {
+        project = "${env.BRANCH_NAME == 'master' ? 'bri-embrio-dev' : 'bri-embrio-dev'}"
+        IMAGE_REPO = "gcr.io/${project}/${appName}"
+        IMAGE_TAG = "${env.GIT_COMMIT.substring(0,7)}"
+      }
+      steps {
+        container("helm") {
+          sh """
+              helm upgrade ${apps} ./helm/${appName} \
+                --set-string image.repository=${IMAGE_REPO},image.tag=${IMAGE_TAG} \
+                -f ./helm/${appName}/values.yaml  --debug --install --namespace ${namespace}
+            """
+        }
+      }
+    }
+
+
+// Do not Delete curly branch
+  }
+}
