@@ -50,25 +50,25 @@ pipeline {
       }
       }
     }
-    stage("Deployment to Develop") {
-      when {
-        branch 'develop'
-      }
-      environment {
-        project = "${env.BRANCH_NAME == 'master' ? 'bri-embrio-dev' : 'bri-embrio-dev'}"
-        IMAGE_REPO = "gcr.io/${project}/${appName}"
-        IMAGE_TAG = "${env.GIT_COMMIT.substring(0,7)}"
-      }
-      steps {
-        container("helm") {
-          sh """
-              helm upgrade ${apps} ./helm/${appName} \
-                --set-string image.repository=${IMAGE_REPO},image.tag=${IMAGE_TAG} \
-                -f ./helm/${appName}/values.yaml  --debug --install --namespace ${namespace}
-            """
-        }
-      }
-    }
+    // stage("Deployment to Develop") {
+    //   when {
+    //     branch 'develop'
+    //   }
+    //   environment {
+    //     project = "${env.BRANCH_NAME == 'master' ? 'bri-embrio-dev' : 'bri-embrio-dev'}"
+    //     IMAGE_REPO = "gcr.io/${project}/${appName}"
+    //     IMAGE_TAG = "${env.GIT_COMMIT.substring(0,7)}"
+    //   }
+    //   steps {
+    //     container("helm") {
+    //       sh """
+    //           helm upgrade ${apps} ./helm/${appName} \
+    //             --set-string image.repository=${IMAGE_REPO},image.tag=${IMAGE_TAG} \
+    //             -f ./helm/${appName}/values.yaml  --debug --install --namespace ${namespace}
+    //         """
+    //     }
+    //   }
+    // }
 
 
 // Do not Delete curly branch
