@@ -103,10 +103,11 @@ func Routing(ctx cfg.RepositoryContext) *gin.Engine {
 		function.GET("/bill-detail", services.BillDetail(ctx))
 		function.GET("/bill-list", services.BillList(ctx))
 		function.POST("/send-bill", services.SendBillDetail(ctx))
+		function.GET("/name-card", services.NameCardGet(ctx))
+		function.POST("/name-card", services.NameCardAdd(ctx))
+		function.PUT("/name-card", services.UpdateNameCard(ctx))
 		//function.POST("/get-va", bri.GetBriva(ctx))
 	}
-
-	r.POST("/create-va", bri.Create(ctx))
 
 	return r
 }

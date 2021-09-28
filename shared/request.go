@@ -58,7 +58,6 @@ type ParamDeleteStock struct {
 }
 
 type ParamCustomer struct {
-	IDPelanggan      string    `json:"id_pelanggan" form:"id_pelanggan" url:"id_pelanggan"`
 	IDUser           string    `json:"id_user" form:"id_user" url:"id_user"`
 	IDVa             string    `json:"id_va" form:"id_va" url:"id_va"`
 	Nama             string    `json:"nama" form:"nama" url:"nama"`
@@ -122,4 +121,23 @@ type ParamVirtualAccount struct {
 
 type ParamID struct {
 	ID string `json:"id" form:"id" url:"id"`
+}
+
+type ParamNameCard struct {
+	IDKartuNama string `json:"id_kartunama" form:"id_kartunama" url:"id_kartunama"`
+	IDUser      string `json:"id_user" form:"id_user" url:"id_user"`
+	NamaToko    string `json:"nama_toko" form:"nama_toko" url:"nama_toko"`
+	BidangUsaha string `json:"bidang_usaha" form:"bidang_usaha" url:"bidang_usaha"`
+	Alamat      string `json:"alamat" form:"alamat" url:"alamat"`
+	NoTelepon   string `json:"no_telepon" form:"no_telepon" url:"no_telepon"`
+	IsDeleted   bool   `json:"is_deleted" form:"is_deleted" url:"is_deleted"`
+}
+
+type ParamNameCardEdit struct {
+	IDKartuNama string `json:"id_kartunama" form:"id_kartunama" url:"id_kartunama"`
+	IDUser      string `json:"id_user" form:"id_user" url:"id_user"`
+	NamaToko    string `json:"nama_toko" form:"nama_toko" url:"nama_toko"`
+	BidangUsaha string `json:"bidang_usaha" form:"bidang_usaha" url:"bidang_usaha"`
+	Alamat      string `json:"alamat" form:"alamat" url:"alamat"`
+	NoTelepon   string `json:"no_telepon" form:"no_telepon" url:"no_telepon"`
 }

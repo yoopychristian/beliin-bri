@@ -95,3 +95,12 @@ type BillDetail struct {
 	PilihanPengiriman string `json:"pilihan_pengiriman"`
 	NoVa              string `json:"no_va"`
 }
+
+type NameCard struct {
+	IDKartuNama string `json:"id_kartunama"`
+	IDUser      string `json:"id_user"`
+	NamaToko    string `json:"nama_toko"`
+	BidangUsaha string `json:"bidang_usaha"`
+	Alamat      string `json:"alamat"`
+	NoTelepon   string `json:"no_telepon"`
+}

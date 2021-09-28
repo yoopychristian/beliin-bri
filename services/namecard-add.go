@@ -6,20 +6,18 @@ import (
 	h "beliin-bri/helpers"
 	shared "beliin-bri/shared"
 	"strconv"
-	"time"
 
 	"beliin-bri/tools"
 
 	"github.com/gin-gonic/gin"
 )
 
-func OrderAdd(ctx cfg.RepositoryContext) gin.HandlerFunc {
+func NameCardAdd(ctx cfg.RepositoryContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		process := "|services|order-add|"
-		now := time.Now()
+		process := "|services|namecard-add|"
 		randNum := tools.RandomNumber(100000, 999999)
 		strRandNum := strconv.Itoa(randNum)
-		input := shared.ParamOrder{}
+		input := shared.ParamNameCard{}
 		if err := c.Bind(&input); err != nil {
 			h.BadResponse(h.RespParams{
 				Log:      ctx.Log,
@@ -44,75 +42,60 @@ func OrderAdd(ctx cfg.RepositoryContext) gin.HandlerFunc {
 			return
 		}
 
-		//id-va
-		if err := h.MustNotEmpty(input.IDStock, "id-stock"); err != nil {
+		//nama-toko
+		if err := h.MustNotEmpty(input.NamaToko, "nama-toko"); err != nil {
 			h.BadResponse(h.RespParams{
 				Log:      ctx.Log,
 				Context:  c,
 				Severity: h.DEBUG,
-				Section:  process + "idstock-mustnotempty",
+				Section:  process + "nama-toko-mustnotempty",
 				Reason:   err.Error(),
 				Input:    input,
 			})
 			return
 		}
 
-		//id-pelanggan
-		if err := h.MustNotEmpty(input.IDPelanggan, "id-pelanggan"); err != nil {
+		//bidang-usaha
+		if err := h.MustNotEmpty(input.BidangUsaha, "bidang-usaha"); err != nil {
 			h.BadResponse(h.RespParams{
 				Log:      ctx.Log,
 				Context:  c,
 				Severity: h.DEBUG,
-				Section:  process + "idPelanggan-mustnotempty",
+				Section:  process + "bidang-usaha-mustnotempty",
 				Reason:   err.Error(),
 				Input:    input,
 			})
 			return
 		}
 
-		//jumlah-barang
-		if err := h.NotZero(input.JumlahBarang, "jumlah-barang"); err != nil {
+		//alamat
+		if err := h.MustNotEmpty(input.Alamat, "alamat"); err != nil {
 			h.BadResponse(h.RespParams{
 				Log:      ctx.Log,
 				Context:  c,
 				Severity: h.DEBUG,
-				Section:  process + "jumlahBarang-mustnotzero",
+				Section:  process + "email-mustnotempty",
 				Reason:   err.Error(),
 				Input:    input,
 			})
 			return
 		}
 
-		//total-harga
-		if err := h.MustNotEmpty(input.TotalHarga, "total-harga"); err != nil {
+		//no-telepon
+		if err := h.MustNotEmpty(input.NoTelepon, "no-telepon"); err != nil {
 			h.BadResponse(h.RespParams{
 				Log:      ctx.Log,
 				Context:  c,
 				Severity: h.DEBUG,
-				Section:  process + "totalHarga-mustnotempty",
+				Section:  process + "no-telepon-mustnotempty",
 				Reason:   err.Error(),
 				Input:    input,
 			})
 			return
 		}
 
-		//pilihan-pengiriman
-		if err := h.MustNotEmpty(input.PilihanPengiriman, "pilihan-pengiriman"); err != nil {
-			h.BadResponse(h.RespParams{
-				Log:      ctx.Log,
-				Context:  c,
-				Severity: h.DEBUG,
-				Section:  process + "pilihanPengiriman-mustnotempty",
-				Reason:   err.Error(),
-				Input:    input,
-			})
-			return
-		}
-
-		input.OrderStatus = "Pesanan Baru"
-
-		orders := tables.Order{}
-		if err := orders.Create(ctx.DB, strRandNum, input.IDUser, input.IDStock, input.IDPelanggan, input.TotalHarga, input.PilihanPengiriman, input.OrderStatus, now, input.JumlahBarang, true); err != nil {
+		nameCard := tables.NameCard{}
+		if err := nameCard.Create(ctx.DB, strRandNum, input.IDUser, input.NamaToko, input.BidangUsaha, input.Alamat, input.NoTelepon, true); err != nil {
 			h.BadResponse(h.RespParams{
 				Log:      ctx.Log,
 				Context:  c,
@@ -126,15 +109,6 @@ func OrderAdd(ctx cfg.RepositoryContext) gin.HandlerFunc {
 		}
 
 		//Account Information
-		h.GoodResponse(c, shared.OrderResponse{
-			IDOrder:           input.IDOrder,
-			IDUser:            input.IDUser,
-			IDStock:           input.IDStock,
-			IDPelanggan:       input.IDPelanggan,
-			JumlahBarang:      input.JumlahBarang,
-			TotalHarga:        input.TotalHarga,
-			PilihanPengiriman: input.PilihanPengiriman,
-			OrderStatus:       input.OrderStatus,
-		})
+		h.GoodResponse(c, nil)
 	}
 }
