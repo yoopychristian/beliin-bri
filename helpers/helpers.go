@@ -245,12 +245,11 @@ func SendMail(email, pin string) error {
 
 	m := gomail.NewMessage()
 	m.SetHeader("From", "beliin@bri.com")
-	m.SetHeader("To", "yoopychs@gmail.com", "cora@example.com")
-	m.SetAddressHeader("Cc", "dan@example.com", "Dan")
+	m.SetHeader("To", email)
 	m.SetHeader("Subject", "INVOICE")
 	m.SetBody("text/html", pin)
 	m.Attach("./filepdf/out.pdf")
-	d := gomail.NewDialer("smtp.gmail.com", 587, "yoopychrs@gmail.com", "Sitohang2503")
+	d := gomail.NewDialer("smtp.gmail.com", 587, "embrio.10x@gmail.com", "Embr10!)x")
 
 	// Send the email to Bob, Cora and Dan.
 	if err := d.DialAndSend(m); err != nil {
