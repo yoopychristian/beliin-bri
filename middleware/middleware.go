@@ -2,6 +2,7 @@ package token
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"strconv"
 	"strings"
@@ -76,4 +77,16 @@ func ExtractTokenID(c *gin.Context) (uint, error) {
 		return uint(uid), nil
 	}
 	return 0, nil
+}
+
+func JwtAuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		err := TokenValid(c)
+		if err != nil {
+			c.String(http.StatusUnauthorized, "Unauthorized")
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
 }
