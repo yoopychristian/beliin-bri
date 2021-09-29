@@ -108,9 +108,9 @@ func AddStock(ctx cfg.RepositoryContext) gin.HandlerFunc {
 			})
 			return
 		}
-		input.IDStock = strRandNum
+
 		stock := tables.Stock{}
-		if err := stock.Create(ctx.DB, input.IDStock, input.IDUser, input.NamaBarang, input.Deskripsi, input.HargaSatuan, input.GambarBarang, input.JumlahBarang, now, true); err != nil {
+		if err := stock.Create(ctx.DB, strRandNum, input.IDUser, input.NamaBarang, input.Deskripsi, input.HargaSatuan, input.GambarBarang, input.JumlahBarang, now, true); err != nil {
 			h.BadResponse(h.RespParams{
 				Log:      ctx.Log,
 				Context:  c,
@@ -125,7 +125,7 @@ func AddStock(ctx cfg.RepositoryContext) gin.HandlerFunc {
 
 		//Account Information
 		h.GoodResponse(c, shared.StockReponse{
-			IDStock:      input.IDStock,
+			IDStock:      strRandNum,
 			IDUser:       input.IDUser,
 			NamaBarang:   input.NamaBarang,
 			Deskripsi:    input.Deskripsi,

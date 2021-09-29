@@ -83,13 +83,13 @@ func CustomerAdd(ctx cfg.RepositoryContext) gin.HandlerFunc {
 			return
 		}
 
-		//AlamatPengiriman
-		if err := h.MustNotEmpty(input.AlamatPengiriman, "AlamatPengiriman"); err != nil {
+		//alamat-oengiriman
+		if err := h.MustNotEmpty(input.AlamatPengiriman, "alamat-pengiriman"); err != nil {
 			h.BadResponse(h.RespParams{
 				Log:      ctx.Log,
 				Context:  c,
 				Severity: h.DEBUG,
-				Section:  process + "AlamatPengiriman-mustnotempty",
+				Section:  process + "alamat-pengiriman-mustnotempty",
 				Reason:   err.Error(),
 				Input:    input,
 			})
