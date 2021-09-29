@@ -54,7 +54,7 @@ func DeleteOrder(ctx cfg.RepositoryContext) gin.HandlerFunc {
 
 		//Account Information
 		c.JSON(http.StatusOK, gin.H{
-			"data": "delete stock succesfull",
+			"data": "delete order succesfull",
 		})
 	}
 }

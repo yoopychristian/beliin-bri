@@ -44,7 +44,7 @@ func OrderAdd(ctx cfg.RepositoryContext) gin.HandlerFunc {
 			return
 		}
 
-		//id-va
+		//id-stock
 		if err := h.MustNotEmpty(input.IDStock, "id-stock"); err != nil {
 			h.BadResponse(h.RespParams{
 				Log:      ctx.Log,

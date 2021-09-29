@@ -32,7 +32,6 @@ type ParamLogin struct {
 }
 
 type ParamStock struct {
-	IDStock      string    `json:"id_stock" form:"id_stock" url:"id_stock"`
 	IDUser       string    `json:"id_user" form:"id_user" url:"id_user"`
 	NamaBarang   string    `json:"nama_barang" form:"nama_barang" url:"nama_barang"`
 	Deskripsi    string    `json:"deskripsi" form:"deskripsi" url:"deskripsi"`
